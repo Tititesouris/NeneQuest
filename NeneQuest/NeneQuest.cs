@@ -7,17 +7,10 @@ namespace NeneQuest
     public class NeneQuest : Game
     {
         GraphicsDeviceManager graphics;
+        
         SpriteBatch spriteBatch;
 
-        Texture2D texture;
-        Vector2 position;
-        Rectangle drawRec;
-        float alpha = 1.0f;
-        float rotation = 0.0f;
-        Vector2 origin = new Vector2(0, 0);
-        float scale = 1.0f;
-        SpriteEffects spriteEffect = SpriteEffects.None;
-        float zDepth = 0.1f;
+        private Scene scene;
 
         public NeneQuest()
         {
@@ -28,18 +21,19 @@ namespace NeneQuest
         protected override void Initialize()
         {
             base.Initialize();
+            scene = new Menu();
+            scene.Initialize();
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            texture = Content.Load<Texture2D>(@"monogamelogo46px");
-            drawRec = new Rectangle(0, 0, texture.Width, texture.Height);
-            position = new Vector2(0, 0);
+            scene.LoadContent();
         }
 
         protected override void UnloadContent()
         {
+            scene.UnloadContent();
         }
 
         protected override void Update(GameTime gameTime)
@@ -48,23 +42,13 @@ namespace NeneQuest
                 ButtonState.Pressed || Keyboard.GetState().IsKeyDown(
                     Keys.Escape))
                 Exit();
+            scene.Update(gameTime);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            spriteBatch.Draw(texture,
-                position,
-                drawRec,
-                Color.White * alpha,
-                rotation,
-                origin,
-                scale,
-                spriteEffect,
-                zDepth);
-            spriteBatch.End();
+            scene.Draw(gameTime, graphics, spriteBatch);
             base.Draw(gameTime);
         }
     }
